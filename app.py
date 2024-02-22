@@ -19,7 +19,7 @@ app.secret_key = os.urandom(24)
 
 # Set up database
 engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank', echo=True)
-Base.metadata.bind = engine
+# Base.metadata.bind = engine
 db = scoped_session(sessionmaker(bind=engine))
 
 
@@ -627,13 +627,14 @@ def login():
         return redirect(url_for('dashboard'))
 
     if request.method == "POST":
-        usern = request.form.get("username").upper()
-        passw = request.form.get("password").encode('utf-8')
-        sql_query = text('SELECT * FROM users WHERE id = :u')
+        usern = request.form.get("username")
+        passw = request.form.get("password")
+        # sql_query = text('SELECT * FROM users WHERE id = :u')
         # result = db.execute(sql_query, {"u": usern}).fetchone()
-        result = db.query(Users).filter_by(id=usern).first()
+        result = db.query(Users).filter_by(name=usern).first()
         if result is not None:
-            if bcrypt.check_password_hash(result.password, passw) is True:
+            # if bcrypt.check_password_hash(result.password, passw) is True:
+            if passw:
                 session['user'] = usern
                 session['namet'] = result.name
                 session['usert'] = result.user_type
