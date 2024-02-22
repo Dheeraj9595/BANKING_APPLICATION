@@ -27,3 +27,4 @@ urllib3
 Werkzeug
 xlrd
 xlwt
+mysql-connector-python==8.3.0

@@ -11,7 +11,7 @@ Base = declarative_base()
 
 class Users(Base):
     __tablename__ = 'users'
-    id = Column(String, primary_key=True)
+    id = Column(String(20), primary_key=True)
     name = Column(String(250), nullable=False)
     user_type = Column(String(250), nullable=False)
     password = Column(String(250))
@@ -58,5 +58,5 @@ class Transactions(Base):
     time_stamp = Column(DateTime(timezone=False), default=datetime.datetime.utcnow)
 
 
-engine = create_engine('sqlite:///database.db')
+engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank')
 Base.metadata.create_all(engine)
