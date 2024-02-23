@@ -34,5 +34,5 @@
     {% endif %}
     <a href="#contact">Contact Us</a>
     <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
-  {% endif %}
+    <span class="user-type" style="color: red; font-weight: bold;font-size: 16px;">{{ session['usert'] }}</span>{% endif %}
 </div>
