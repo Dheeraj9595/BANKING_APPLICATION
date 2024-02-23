@@ -7,11 +7,11 @@ from flask_bcrypt import Bcrypt
 from flask_session import Session
 from database import Base, Accounts, Customers, Users, CustomerLog, Transactions
 from sqlalchemy import create_engine, exc
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker, joinedload
 import datetime
 import xlwt
 from fpdf import FPDF
-from sqlalchemy import text
+from sqlalchemy import text, or_
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -206,7 +206,7 @@ def customerstatus():
     if session['usert'] == "executive":
         # join query to get one log message per customer id
         sql_query = text(
-            "SELECT customers.cust_id as id, customers.cust_ssn_id as ssn_id, customerlog.log_message as message, customerlog.time_stamp as date from (select cust_id,log_message,time_stamp from customerlog group by cust_id ORDER by time_stamp desc) as customerlog JOIN customers ON customers.cust_id = customerlog.cust_id group by customerlog.cust_id order by customerlog.time_stamp desc")
+            "SELECT customers.cust_id AS id, customers.cust_ssn_id AS ssn_id, MAX(customerlog.log_message) AS message, MAX(customerlog.time_stamp) AS date FROM (SELECT cust_id, MAX(log_message) AS log_message, MAX(time_stamp) AS time_stamp FROM customerlog GROUP BY cust_id) AS customerlog JOIN customers ON customers.cust_id = customerlog.cust_id GROUP BY customerlog.cust_id, customers.cust_id, customers.cust_ssn_id ORDER BY MAX(customerlog.time_stamp) DESC;")
         data = db.execute(sql_query).fetchall()
         if data:
             return render_template('customerstatus.html', customerstatus=True, data=data)
@@ -280,6 +280,26 @@ def delaccount():
     return render_template('delaccount.html', delaccount=True)
 
 
+# @app.route("/viewaccount", methods=["GET", "POST"])
+# def viewaccount():
+#     if 'user' not in session:
+#         return redirect(url_for('login'))
+#     if session['usert'] == "executive" or session['usert'] == "teller" or session['usert'] == "cashier":
+#         if request.method == "POST":
+#             acc_id = request.form.get("acc_id")
+#             cust_id = request.form.get("cust_id")
+#             sql_query = text("SELECT * from accounts WHERE cust_id = :c or acc_id = :d")
+#             data = db.execute(sql_query, {"c": cust_id, "d": acc_id}).fetchall()
+#             if data:
+#                 return render_template('viewaccount.html', viewaccount=True, data=data)
+#
+#             flash("Account not found! Please,Check you input.", 'danger')
+#     else:
+#         flash("You don't have access to this page", "warning")
+#         return redirect(url_for('dashboard'))
+#     return render_template('viewaccount.html', viewaccount=True)
+
+
 @app.route("/viewaccount", methods=["GET", "POST"])
 def viewaccount():
     if 'user' not in session:
@@ -288,12 +308,13 @@ def viewaccount():
         if request.method == "POST":
             acc_id = request.form.get("acc_id")
             cust_id = request.form.get("cust_id")
-            sql_query = text("SELECT * from accounts WHERE cust_id = :c or acc_id = :d")
-            data = db.execute(sql_query, {"c": cust_id, "d": acc_id}).fetchall()
+            # Use joinedload to fetch customer details along with account details
+            data = db.query(Accounts).options(joinedload(Accounts.customers)).filter(or_(Accounts.cust_id == cust_id,
+                                                                                         Accounts.acc_id == acc_id)).all()
             if data:
                 return render_template('viewaccount.html', viewaccount=True, data=data)
 
-            flash("Account not found! Please,Check you input.", 'danger')
+            flash("Account not found! Please, check your input.", 'danger')
     else:
         flash("You don't have access to this page", "warning")
         return redirect(url_for('dashboard'))
