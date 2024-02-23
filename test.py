@@ -1,15 +1,31 @@
-from app import db
-from database import Users
+# from app import db
+# from database import Users
+#
+# user_data = {'id': 'C00000005', 'name': 'dheeraj', 'user_type': 'cashier', 'password': 'Dheeraj@95'}
+#
+# new_user = Users(id=user_data['id'], name=user_data['name'], user_type=user_data['user_type'],
+#                  password=user_data['password'])
+#
+# db.add(new_user)
+#
+# db.commit()
+#
+# db.refresh(new_user)
+#
+# db.close()
 
-user_data = {'id': 'C00000005', 'name': 'dheeraj', 'user_type': 'cashier', 'password': 'Dheeraj@95'}
 
-new_user = Users(id=user_data['id'], name=user_data['name'], user_type=user_data['user_type'],
-                 password=user_data['password'])
+from flask_bcrypt import Bcrypt
+from app import app
 
-db.add(new_user)
 
-db.commit()
+bcrypt = Bcrypt(app)
 
-db.refresh(new_user)
+password = 'Dheeraj@95'
+passw = 'Dheeraj@95'
 
-db.close()
+if bcrypt.check_password_hash(password, passw) is True:
+    print(True)
+else:
+    print(False)
+

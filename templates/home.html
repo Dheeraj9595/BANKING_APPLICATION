@@ -7,11 +7,29 @@
   <div class="jumbotron">
       <div class="col-sm-8 mx-auto">
           <h1>Welcome</h1>
-          <p style="color: black;"><b> Welcome to The Retail Bank! Retail bank serves individual customers, to manage their savings and current accounts. It has the ability to create customer, open customer account, update and delete customer, manage cashier transactions such as deposit, withdraw and transfer functionalities.</b></p>
+          <p style="color: black;"><b>Welcome to The Retail Bank! Retail bank serves individual customers, to manage their savings and current accounts. It has the ability to create customer, open customer account, update and delete customer, manage cashier transactions such as deposit, withdraw and transfer functionalities.</b></p>
+          <div class="card-body">
+            {% if data %}
+            {% for user in data %}
+            <div class="row mb-4">
+                <table class="col-md-12">
+                    <tbody>
+                        <tr>
+                            <td>
+                                User Type
+                            </td>
+                            <td>
+                                {{ user.user_type }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
       </div>
   </div>
 </main>
-
-
 
 {% endblock %}

@@ -27,7 +27,9 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route('/')
 @app.route("/dashboard")
 def dashboard():
-    return render_template("home.html", home=True)
+    current_user = session.get('user')
+    data = db.query(Users).filter_by(name=current_user).all()
+    return render_template("home.html", data=data)
 
 
 @app.route("/addcustomer", methods=["GET", "POST"])
