@@ -5,6 +5,9 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 Base = declarative_base()
 
@@ -56,6 +59,13 @@ class Transactions(Base):
     trans_message = Column(String(250), nullable=False)
     amount = Column(Integer, nullable=False)
     time_stamp = Column(DateTime(timezone=False), default=datetime.datetime.utcnow)
+
+
+def check_password(hashed_pass, password):
+    if bcrypt.check_password_hash(pw_hash=hashed_pass, password=password):
+        return True
+    else:
+        return False
 
 
 engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank')

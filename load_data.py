@@ -10,17 +10,17 @@ from flask_bcrypt import Bcrypt
 from flask import Flask
 
 app = Flask(__name__)
-engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank',echo=True)
+engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank', echo=True)
 Base.metadata.bind = engine
 db = scoped_session(sessionmaker(bind=engine))
-bcrypt = Bcrypt(app)
+bcrypt = Bcrypt()
 
 
 def accounts():
     users_data = [
-        {'id': 'C00000001', 'name': 'ramesh', 'user_type': 'executive', 'password': 'Ramesh@001'},
-        {'id': 'C00000002', 'name': 'suresh', 'user_type': 'cashier', 'password': 'Suresh@002'},
-        {'id': 'C00000003', 'name': 'mahesh', 'user_type': 'teller', 'password': 'Mahesh@003'},
+        {'id': 'C00000006', 'name': 'suraj', 'user_type': 'executive', 'password': 'Dheeraj@95'},
+        {'id': 'C00000007', 'name': 'pawan', 'user_type': 'cashier', 'password': 'Dheeraj@95'},
+        {'id': 'C00000008', 'name': 'nandi', 'user_type': 'teller', 'password': 'Dheeraj@95'},
     ]
 
     for user_data in users_data:
@@ -35,3 +35,4 @@ def accounts():
 
 if __name__ == "__main__":
     accounts()
+

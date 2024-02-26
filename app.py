@@ -5,7 +5,8 @@ from flask import send_file
 from flask import Flask, session, render_template, request, redirect, url_for, flash, jsonify, Response
 from flask_bcrypt import Bcrypt
 from flask_session import Session
-from database import Base, Accounts, Customers, Users, CustomerLog, Transactions
+from database import Base, Accounts, Customers, Users, CustomerLog, \
+    Transactions, check_password
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import scoped_session, sessionmaker, joinedload
 import datetime
@@ -14,7 +15,7 @@ from fpdf import FPDF
 from sqlalchemy import text, or_
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+bcrypt = Bcrypt()
 app.secret_key = os.urandom(24)
 
 # Set up database
@@ -644,6 +645,26 @@ def logout():
 
 
 # LOGIN
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     # breakpoint()
+#     if 'user' in session:
+#         return redirect(url_for('dashboard'))
+#
+#     if request.method == "POST":
+#         usern = request.form.get("username")
+#         passw = request.form.get("password")
+#         result = db.query(Users).filter_by(name=usern).first()
+#         check_password(hashed_pass=usern, password=result.password)
+#                 session['user'] = usern
+#                 session['namet'] = result.name
+#                 session['usert'] = result.user_type
+#                 flash(f"{result.name.capitalize()}, you are successfully logged in!", "success")
+#                 return redirect(url_for('dashboard'))
+#         flash("Sorry, Username or password not match.", "danger")
+#     return render_template("login.html")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if 'user' in session:
@@ -652,19 +673,18 @@ def login():
     if request.method == "POST":
         usern = request.form.get("username")
         passw = request.form.get("password")
-        # sql_query = text('SELECT * FROM users WHERE id = :u')
-        # result = db.execute(sql_query, {"u": usern}).fetchone()
         result = db.query(Users).filter_by(name=usern).first()
-        if result is not None:
-            # if bcrypt.check_password_hash(result.password, passw) is True:
-            if passw:
-                session['user'] = usern
-                session['namet'] = result.name
-                session['usert'] = result.user_type
-                flash(f"{result.name.capitalize()}, you are successfully logged in!", "success")
-                return redirect(url_for('dashboard'))
+
+        if result and check_password(hashed_pass=result.password, password=passw):
+            session['user'] = usern
+            session['namet'] = result.name
+            session['usert'] = result.user_type
+            flash(f"{result.name.capitalize()}, you are successfully logged in!", "success")
+            return redirect(url_for('dashboard'))
+
         flash("Sorry, Username or password not match.", "danger")
-    return render_template("login.html", login=True)
+
+    return render_template("login.html")
 
 
 # Api

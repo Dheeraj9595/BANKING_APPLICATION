@@ -14,18 +14,57 @@
 #
 # db.close()
 
-
+from flask import session, redirect, url_for, request, flash, render_template
+from app import db
+from database import Users
 from flask_bcrypt import Bcrypt
-from app import app
+
+bcrypt = Bcrypt()
 
 
-bcrypt = Bcrypt(app)
+# def login():
+#     breakpoint()
+#     if 'user' in session:
+#         return redirect(url_for('dashboard'))
+#
+#     if request.method == "POST":
+#         usern = request.form.get("username")
+#         passw = request.form.get("password")
+#         # sql_query = text('SELECT * FROM users WHERE id = :u')
+#         # result = db.execute(sql_query, {"u": usern}).fetchone()
+#         result = db.query(Users).filter_by(name=usern).first()
+#         if result is not None:
+#             flag = bcrypt.check_password_hash(passw, result.password)
+#             if flag:
+#                 # if passw:
+#                 session['user'] = usern
+#                 session['namet'] = result.name
+#                 session['usert'] = result.user_type
+#                 flash(f"{result.name.capitalize()}, you are successfully logged in!", "success")
+#                 return redirect(url_for('dashboard'))
+#         flash("Sorry, Username or password not match.", "danger")
+#     return render_template("login.html", login=True)
 
-password = 'Dheeraj@95'
-passw = 'Dheeraj@95'
+# from flask_bcrypt import Bcrypt
+# from app import app
+#
+# bcrypt = Bcrypt(app)
+#
+# password = 'Dheeraj@95'
+# passw = 'Dheeraj@95'
+#
+# if bcrypt.check_password_hash(password, passw) is True:
+#     print(True)
+# else:
+#     print(False)
 
-if bcrypt.check_password_hash(password, passw) is True:
-    print(True)
-else:
-    print(False)
 
+# def check_password(hashed_pass, password):
+#     if bcrypt.check_password_hash(pw_hash=hashed_pass, password=password):
+#         return True
+#     else:
+#         return False
+
+
+# result = check_password('$2b$12$SVggcNhPgcowLJDKPKEuouTv5JbPj5SEe2tzL6W/v5bNsnJz.M5mi', 'Dheeraj@95')
+# print(result)
