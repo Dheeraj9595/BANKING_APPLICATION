@@ -509,11 +509,12 @@ def statement():
             end_date = request.form.get("end_date")
             if flag == "red":
                 sql_query = text(
-                    "SELECT * FROM (SELECT * FROM transactions where acc_id=:d ORDER BY trans_id DESC LIMIT :l)Var1 ORDER BY trans_id ASC;")
+                    "SELECT * FROM (SELECT * FROM transactions where acc_id=:d ORDER BY trans_id DESC)Var1 ORDER BY trans_id ASC;")
                 data = db.execute(sql_query, {"d": acc_id, "l": number}).fetchall()
             else:
                 sql_query = text(
-                    "SELECT * FROM transactions WHERE acc_id=:a between DATE(time_stamp) >= :s AND DATE(time_stamp) <= :e;")
+                    "SELECT * FROM transactions WHERE acc_id=:a between DATE(time_stamp) >= :s AND DATE(time_stamp) "
+                    "<= :e;")
                 data = db.execute(sql_query, {"a": acc_id, "s": start_date, "e": end_date}).fetchall()
             if data:
                 return render_template('statement.html', statement=True, data=data, acc_id=acc_id)
