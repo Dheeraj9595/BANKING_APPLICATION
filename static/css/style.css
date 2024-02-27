@@ -1813,4 +1813,46 @@ body {font-family: Verdana, sans-serif; margin:0}
 
 img {vertical-align: middle;}
 
+/* style.css */
+
+.create-account-form {
+    max-width: 400px; /* Set a maximum width for the form */
+    margin: auto; /* Center the form horizontally */
+}
+
+.create-account-form label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.create-account-form input[type="text"],
+.create-account-form input[type="password"],
+.create-account-form select {
+    width: 150%; /* Make input boxes and select fill the container width */
+    padding: 15px; /* Add some padding for better visual appearance */
+    margin-bottom: 12px; /* Add spacing between input boxes */
+}
+
+.create-account-form input[type="submit"] {
+    background-color: #4caf50; /* Green background color */
+    color: white; /* White text color */
+    padding: 10px 15px; /* Add padding to the button */
+    border: none; /* Remove the default border */
+    border-radius: 4px; /* Add border radius for a rounded appearance */
+    cursor: pointer; /* Add cursor pointer on hover */
+}
+
+.create-account-form input[type="submit"]:hover {
+    background-color: #45a049; /* Darker green color on hover */
+}
+
+/* style.css */
+
+.create-account-heading {
+    background-color: #4caf50;
+    color: black;
+    padding: 10px;
+    border: 4px;
+
+}
 

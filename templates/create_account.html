@@ -1,0 +1,31 @@
+<!-- templates/create_account.html -->
+{% extends "layout.html" %}
+
+{% block title %}Add Customer{% endblock %}
+
+{% block content %}
+    <h2 class="create-account-heading">Create User</h2>
+    <form method="POST" action="{{ url_for('create_account') }}" class="create-account-form">
+        <label for="id">Account ID:</label>
+        <input type="text" id="id" name="id" required>
+        <br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+
+        <label for="user_type">User Type:</label>
+        <select id="user_type" name="user_type" required>
+            <option value="executive">Executive</option>
+            <option value="cashier">Cashier</option>
+            <option value="teller">Teller</option>
+        </select>
+        <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+
+        <input type="submit" value="Create Account">
+    </form>
+{% endblock %}

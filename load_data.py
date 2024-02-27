@@ -18,9 +18,9 @@ bcrypt = Bcrypt()
 
 def accounts():
     users_data = [
-        {'id': 'C00000006', 'name': 'suraj', 'user_type': 'executive', 'password': 'Dheeraj@95'},
-        {'id': 'C00000007', 'name': 'pawan', 'user_type': 'cashier', 'password': 'Dheeraj@95'},
-        {'id': 'C00000008', 'name': 'nandi', 'user_type': 'teller', 'password': 'Dheeraj@95'},
+        {'id': 'C00000009', 'name': 'shahrukh', 'user_type': 'executive', 'password': 'Dheeraj@95'},
+        {'id': 'C00000010', 'name': 'salman', 'user_type': 'cashier', 'password': 'Dheeraj@95'},
+        {'id': 'C00000011', 'name': 'amir', 'user_type': 'teller', 'password': 'Dheeraj@95'},
     ]
 
     for user_data in users_data:

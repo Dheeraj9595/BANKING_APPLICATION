@@ -66,7 +66,8 @@ def addcustomer():
                 else:
                     query = Customers(cust_ssn_id=cust_ssn_id, name=name, address=address, age=age, state=state,
                                       city=city, status='activate')
-                # result = db.execute("INSERT INTO customers (cust_ssn_id,name,address,age,state,city) VALUES (:c,:n,:add,:a,:s,:city)", {"c": cust_ssn_id,"n":name,"add":address,"a": age,"s":state,"city":city})
+                # result = db.execute("INSERT INTO customers (cust_ssn_id,name,address,age,state,city) VALUES (:c,:n,
+                # :add,:a,:s,:city)", {"c": cust_ssn_id,"n":name,"add":address,"a": age,"s":state,"city":city})
                 db.add(query)
                 db.commit()
                 if query.cust_id is None:
@@ -745,6 +746,38 @@ def customerlog():
                 }
                 dict_data.append(t)
             return jsonify(dict_data)
+
+
+# Function to render the account creation form
+@app.route('/create-account', methods=['GET'])
+def render_create_account_form():
+    return render_template('create_account.html')
+
+
+# Function to handle account creation form submission
+@app.route('/create-account', methods=['POST'])
+def create_account():
+    if 'user' not in session:
+        flash("Please login", "warning")
+        return redirect(url_for('login'))
+
+    if session.get('usert') != "admin":
+        flash("You don't have access to this feature Please Login as Admin to Create Users.", "warning")
+        return redirect(url_for('login'))  # Redirect non-admin users to login
+
+    if request.method == 'POST':
+        account_id = request.form.get('id')
+        name = request.form.get('name')
+        user_type = request.form.get('user_type')
+        password = request.form.get('password')
+
+        passw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user = Users(id=account_id, name=name, user_type=user_type, password=passw_hash)
+        db.add(new_user)
+        db.commit()
+
+        flash(f"Account for {name} ({account_id}) created successfully!", 'success')
+        return redirect(url_for('render_create_account_form'))  # Redirect admin user to create account form
 
 
 # Main
