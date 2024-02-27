@@ -1,11 +1,13 @@
+import datetime
 import os
-import sys, datetime
-from sqlalchemy import Column, ForeignKey, Integer, String, BigInteger
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import DateTime
-from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+
+from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import DateTime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import relationship
 
 bcrypt = Bcrypt()
 
@@ -68,5 +70,13 @@ def check_password(hashed_pass, password):
         return False
 
 
-engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank')
-Base.metadata.create_all(engine)
+load_dotenv()  # Load environment variables from .env file
+
+# Access environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Use DATABASE_URL in your SQLAlchemy create_engine call
+engine = create_engine(DATABASE_URL)
+
+# engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank')
+# Base.metadata.create_all(engine)

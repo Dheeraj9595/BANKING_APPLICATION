@@ -13,13 +13,21 @@ import datetime
 import xlwt
 from fpdf import FPDF
 from sqlalchemy import text, or_
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 bcrypt = Bcrypt()
 app.secret_key = os.urandom(24)
 
+load_dotenv()
 # Set up database
-engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank', echo=True)
+# Access environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Use DATABASE_URL in your SQLAlchemy create_engine call
+engine = create_engine(DATABASE_URL)
+
+# engine = create_engine('mysql+mysqlconnector://admin:Root*1234@localhost:3306/flask_bank', echo=True)
 # Base.metadata.bind = engine
 db = scoped_session(sessionmaker(bind=engine))
 
