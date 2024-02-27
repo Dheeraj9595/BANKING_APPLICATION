@@ -1,9 +1,10 @@
 <div class="navbar">
   <a href="{{ url_for('dashboard') }}" class="nav-link {% if home %}active{% endif %}">Home</a>
-  <a href="{{ url_for('create_account') }}" class="nav-link {% if login %}active{% endif %}">Create Users</a>
+  {% if session['usert'] == 'admin' %}
+    <a href="{{ url_for('create_account') }}" class="nav-link {% if create_account %}active{% endif %}">Create Users</a>
+  {% endif %}
   {% if not session['user'] %}
   <a href="{{ url_for('login') }}" class="nav-link {% if login %}active{% endif %}">Log In</a>
-  <a href="{{ url_for('create_account') }}" class="nav-link {% if login %}active{% endif %}">Create Users</a>
   {% else %}
     {% if session['usert']=="executive" %}
       <div class="subnav">

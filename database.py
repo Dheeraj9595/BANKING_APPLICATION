@@ -6,8 +6,8 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy import DateTime
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import declarative_base, relationship, Session
+from sqlalchemy.exc import IntegrityError
 
 bcrypt = Bcrypt()
 
@@ -20,6 +20,48 @@ class Users(Base):
     name = Column(String(250), nullable=False)
     user_type = Column(String(250), nullable=False)
     password = Column(String(250))
+
+    @classmethod
+    def create(cls, session: Session, id: str, name: str, user_type: str, password: str):
+        try:
+            new_user = cls(id=id, name=name, user_type=user_type, password=password)
+            session.add(new_user)
+            session.commit()
+            return new_user
+        except IntegrityError:
+            session.rollback()
+            return None
+
+    @classmethod
+    def read(cls, session: Session, user_id: str):
+        return session.query(cls).filter_by(id=user_id).first()
+
+    @classmethod
+    def update(cls, session: Session, user_id: str, **kwargs):
+        user = cls.read(session, user_id)
+        if user:
+            try:
+                for key, value in kwargs.items():
+                    setattr(user, key, value)
+                session.commit()
+                return user
+            except IntegrityError:
+                session.rollback()
+                return None
+        return None
+
+    @classmethod
+    def delete(cls, session: Session, user_id: str):
+        user = cls.read(session, user_id)
+        if user:
+            try:
+                session.delete(user)
+                session.commit()
+                return True
+            except IntegrityError:
+                session.rollback()
+                return False
+        return False
 
 
 class Customers(Base):

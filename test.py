@@ -21,7 +21,6 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
 
-
 # def login():
 #     breakpoint()
 #     if 'user' in session:
@@ -68,3 +67,8 @@ bcrypt = Bcrypt()
 
 # result = check_password('$2b$12$SVggcNhPgcowLJDKPKEuouTv5JbPj5SEe2tzL6W/v5bNsnJz.M5mi', 'Dheeraj@95')
 # print(result)
+
+# print(Users.create(id='C00000016', session=db, name='Abhi', user_type='admin', password='Dheeraj@95'))
+
+print(Users.read(session=db, user_id="C00000016"))
+
